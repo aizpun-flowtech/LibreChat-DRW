@@ -15,7 +15,7 @@ services:
   rag_api:
     image: ghcr.io/danny-avila/librechat-rag-api-dev:latest
     environment:
-      - DB_HOST=vectordb
+      - DB_HOST=vectordb_drw
       - DB_PORT=5432
       - POSTGRES_DB=mydatabase
       - POSTGRES_USER=myuser

@@ -5,7 +5,7 @@ version: "3.4"
 
 services:
   api:
-    container_name: LibreChat
+    container_name: LibreChat-DRW
     ports:
       - "${PORT}:${PORT}"
     depends_on:
@@ -29,7 +29,7 @@ services:
       - ./images:/app/client/public/images
       - ./logs:/app/api/logs
   mongodb:
-    container_name: chat-mongodb
+    container_name: chat-mongodb-drw
     image: mongo
     restart: always
     user: "${UID}:${GID}"
@@ -37,7 +37,7 @@ services:
       - ./data-node:/data/db
     command: mongod --noauth
   meilisearch:
-    container_name: chat-meilisearch
+    container_name: chat-meilisearch-drw
     image: getmeili/meilisearch:v1.7.3
     restart: always
     user: "${UID}:${GID}"
@@ -47,7 +47,7 @@ services:
     volumes:
       - ./meili_data_v1.7:/meili_data
   vectordb:
-    container_name: vectordb
+    container_name: vectordb-drw
     image: ankane/pgvector:latest
     environment:
       POSTGRES_DB: mydatabase
@@ -57,10 +57,10 @@ services:
     volumes:
       - pgdata2:/var/lib/postgresql/data
   rag_api:
-    container_name: rag_api
+    container_name: rag_api-drw
     image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
     environment:
-      - DB_HOST=vectordb
+      - DB_HOST=vectordb-drw
       - RAG_PORT=${RAG_PORT:-8000}
     restart: always
     depends_on:
