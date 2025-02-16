@@ -21,9 +21,9 @@ services:
       - HOST=0.0.0.0
       - NODE_ENV=production
       - MONGO_URI=mongodb://mongodb:27017/LibreChat-DRW
-      - MEILI_HOST=http://meilisearch:7700
-      - RAG_PORT=${RAG_PORT:-8000}
-      - RAG_API_URL=http://rag_api:${RAG_PORT:-8000}
+      - MEILI_HOST=http://meilisearch:7707
+      - RAG_PORT=${RAG_PORT:-8800}
+      - RAG_API_URL=http://rag_api:${RAG_PORT:-8800}
     volumes:
       - type: bind
         source: ./librechat.yaml
@@ -33,7 +33,7 @@ services:
 
   client:
     image: nginx:1.27.0-alpine
-    container_name: LibreChat-NGINX
+    container_name: LibreChat-NGINX-DRW
     ports:
       - 980:80
       - 9443:443
@@ -47,7 +47,7 @@ services:
       - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf
       - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
   mongodb:
-    container_name: chat-mongodb
+    container_name: chat-mongodb-DRW
     # ports:  # Uncomment this to access mongodb from outside docker, not safe in deployment
     #   - 27018:27017
     image: mongo
@@ -56,7 +56,7 @@ services:
       - ./data-node:/data/db
     command: mongod --noauth
   meilisearch:
-    container_name: chat-meilisearch
+    container_name: chat-meilisearch-DRW
     image: getmeili/meilisearch:v1.7.3
     restart: always
     # ports: # Uncomment this to access meilisearch from outside docker
@@ -64,7 +64,7 @@ services:
     env_file:
       - .env
     environment:
-      - MEILI_HOST=http://meilisearch:7700
+      - MEILI_HOST=http://meilisearch:7707
       - MEILI_NO_ANALYTICS=true
     volumes:
       - ./meili_data_v1.7:/meili_data
@@ -80,8 +80,8 @@ services:
   rag_api:
     image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
     environment:
-      - DB_HOST=vectordb
-      - RAG_PORT=${RAG_PORT:-8000}
+      - DB_HOST=vectordb-DRW
+      - RAG_PORT=${RAG_PORT:-8800}
     restart: always
     depends_on:
       - vectordb
